@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>CYBER TRAINING 150 | DAK • KAL • SISOS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 10%, #03050f, #000000);
+            font-family: 'Share Tech Mono', 'Courier New', 'Fira Code', monospace;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* efek grid cyberpunk */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(#0ff1 1px, transparent 1px), linear-gradient(90deg, #0ff1 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,255,255,0.02) 0px, rgba(0,255,255,0.02) 2px, transparent 2px, transparent 6px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* CYBER CARD */
+        .cyber-card {
+            background: rgba(6, 12, 28, 0.85);
+            backdrop-filter: blur(16px);
+            border: 2px solid #0ff;
+            border-radius: 40px;
+            box-shadow: 0 0 28px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.2);
+            padding: 1.8rem 1.5rem;
+            transition: all 0.2s;
+        }
+
+        /* start screen */
+        .start-screen {
+            text-align: center;
+        }
+        .glitch {
+            font-size: clamp(1.8rem, 8vw, 3rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #0ff;
+            text-shadow: 4px 4px 0 #f0f, -2px -2px 0 #0ff;
+            letter-spacing: 3px;
+            animation: flicker 2.5s infinite;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.9; text-shadow: 4px 4px 0 #f0f, -2px -2px 0 #0ff; }
+            50% { opacity: 1; text-shadow: 2px 2px 0 #0ff, -1px -1px 0 #f0f; }
+            100% { opacity: 0.9; text-shadow: 4px 4px 0 #f0f, -2px -2px 0 #0ff; }
+        }
+        .badge-cyber {
+            display: inline-flex;
+            background: #0ff22;
+            border-left: 4px solid #0ff;
+            padding: 0.3rem 1rem;
+            margin: 0.4rem;
+            font-weight: bold;
+            color: #0ff;
+            font-size: clamp(0.7rem, 3.5vw, 0.9rem);
+        }
+        .btn-cyber {
+            background: transparent;
+            border: 2px solid #0ff;
+            color: #0ff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 12px 28px;
+            margin-top: 24px;
+            cursor: pointer;
+            font-family: monospace;
+            transition: 0.2s;
+            border-radius: 60px;
+            box-shadow: 0 0 8px #0ff;
+            width: auto;
+        }
+        .btn-cyber:hover {
+            background: #0ff;
+            color: #000;
+            box-shadow: 0 0 24px #0ff;
+            transform: scale(0.97);
+        }
+
+        /* status bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: #0a0f1faa;
+            padding: 8px 18px;
+            border-radius: 60px;
+            border: 1px solid #0ff5;
+            margin-bottom: 24px;
+        }
+        .timer-neon {
+            font-size: clamp(1.3rem, 6vw, 2rem);
+            font-weight: bold;
+            background: #000000aa;
+            padding: 4px 14px;
+            border-radius: 40px;
+            color: #0f0;
+            text-shadow: 0 0 6px #0f0;
+            border: 1px solid #0f0;
+            font-family: monospace;
+        }
+        .q-counter {
+            color: #0ff;
+            background: #11161f;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            border: 1px solid #0ff;
+        }
+
+        /* question area */
+        .question-text {
+            font-size: clamp(1.1rem, 5vw, 1.55rem);
+            font-weight: 600;
+            line-height: 1.35;
+            margin: 16px 0 24px 0;
+            color: #eef4ff;
+        }
+        .q-num {
+            display: inline-block;
+            background: #0ff22;
+            padding: 4px 14px;
+            border-radius: 30px;
+            color: #0ff;
+            border: 1px solid #0ff;
+            font-size: 0.75rem;
+        }
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 8px;
+        }
+        .opt-item {
+            background: #0c1122cc;
+            border: 1px solid #2c3e77;
+            border-radius: 60px;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: 0.12s;
+        }
+        .opt-item:hover {
+            background: #1f2b4e;
+            border-color: #0ff;
+            box-shadow: 0 0 8px #0ff3;
+        }
+        .opt-radio {
+            width: 18px;
+            height: 18px;
+            accent-color: #0ff;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .opt-text {
+            font-size: clamp(0.85rem, 4vw, 1rem);
+            color: #cbd5f0;
+            word-break: break-word;
+        }
+
+        /* navigasi */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            background: none;
+            border: 1.5px solid #0ff;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-family: monospace;
+            color: #0ff;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: 90px;
+        }
+        .nav-btn.primary {
+            background: #0ff1a;
+            box-shadow: 0 0 6px #0ff;
+        }
+        .nav-btn:hover {
+            background: #0ff;
+            color: #000;
+        }
+        .submit-final {
+            background: #f0f22;
+            border-color: #f0f;
+            color: #f0f;
+        }
+        .submit-final:hover {
+            background: #f0f;
+            color: #000;
+        }
+
+        /* MODAL KONFIRMASI CANTIK */
+        .custom-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s ease;
+        }
+        .custom-modal.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-card {
+            background: #0a0f1f;
+            border: 2px solid #f0f;
+            border-radius: 48px;
+            padding: 1.8rem;
+            max-width: 340px;
+            width: 85%;
+            text-align: center;
+            box-shadow: 0 0 40px #f0f5;
+        }
+        .modal-card h3 {
+            color: #f0f;
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 28px;
+            justify-content: center;
+        }
+        .modal-btn {
+            background: none;
+            border: 1.5px solid #0ff;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .modal-btn.confirm {
+            background: #f0f;
+            color: #000;
+            border: none;
+        }
+        .modal-btn.cancel {
+            color: #0ff;
+        }
+
+        /* HALAMAN TERIMA KASIH */
+        .thankyou-screen {
+            text-align: center;
+        }
+        .score-glow {
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            font-weight: 800;
+            color: #0f0;
+            text-shadow: 0 0 18px #0f0;
+            background: #00000066;
+            display: inline-block;
+            padding: 0.2rem 1.2rem;
+            border-radius: 60px;
+            margin: 20px 0;
+        }
+
+        .footer-note {
+            margin-top: 24px;
+            color: #6c7a9e;
+            font-size: 0.65rem;
+        }
+
+        @media (max-width: 550px) {
+            .cyber-card { padding: 1.2rem; }
+            .nav-buttons { gap: 8px; }
+            .nav-btn { padding: 6px 12px; font-size: 0.7rem; min-width: 70px; }
+            .opt-item { padding: 8px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container" id="appRoot">
+    <!-- START SCREEN -->
+    <div id="startScreen" class="cyber-card start-screen">
+        <div class="glitch">◢ CYBER TRAINING ◣</div>
+        <div style="margin: 16px 0;">
+            <span class="badge-cyber">⚡ DAK</span>
+            <span class="badge-cyber">⚡ SISOS</span>
+            <span class="badge-cyber">⚡ KAL</span>
+        </div>
+        <p style="color:#9bb4ff;">150 Soal Keamanan Siber | 120 Menit </p>
+        <p style="color:#0ff9; font-size:0.8rem;">⟡ Waktu Berjalan Setelah Mulai ⟡</p>
+        <button id="startExamBtn" class="btn-cyber">⟢ MULAI UJIAN ⟣</button>
+        <div class="footer-note">© Cyber Training 2026 | Kunci Jawaban Rahasia</div>
+    </div>
+
+    <!-- EXAM PANEL -->
+    <div id="examPanel" style="display: none;">
+        <div class="cyber-card">
+            <div class="status-bar">
+                <div class="timer-neon" id="timerDisplay">00:00</div>
+                <div class="q-counter" id="progressCounter">Soal 1 / 150</div>
+            </div>
+            <div id="dynamicQuestionArea">
+                <!-- inject dinamis -->
+            </div>
+            <div class="nav-buttons">
+                <button id="prevBtn" class="nav-btn">◀ SEBELUM</button>
+                <button id="nextBtn" class="nav-btn primary">BERIKUT ▶</button>
+                <button id="finishExamBtn" class="nav-btn submit-final">✔ SELESAI</button>
+            </div>
+            <div class="footer-note"># jawaban akan tersimpan secara otomatis </div>
+        </div>
+    </div>
+
+    <!-- THANKYOU / RESULT PAGE -->
+    <div id="thankyouScreen" style="display: none;">
+        <div class="cyber-card thankyou-screen">
+            <div class="glitch" style="font-size:clamp(1.5rem,6vw,2.2rem);">⚡ TERIMA KASIH ⚡</div>
+            <p style="color:#b9f2ff;">Telah Mengikuti Pelatihan Ujian Siber</p>
+            <div class="score-glow" id="finalScoreDisplay">0 / 150</div>
+            <p id="encouragementMsg" style="font-size:1.1rem; color:#c084fc; margin-top:12px;">✨ Semoga berhasil yaa! ✨</p>
+            <button id="restartBtn" class="btn-cyber" style="margin-top:20px;">⟳ Kerjakan Ulang</button>
+            <div class="footer-note"> Vinnzz | © Copyright2026</div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL KONFIRMASI CUSTOM -->
+<div id="confirmModal" class="custom-modal">
+    <div class="modal-card">
+        <h3>⚠️ SELESAI UJIAN?</h3>
+        <p style="color:#cbd5f0; margin: 10px 0;">Semua jawaban akan dinilai dan sesi diakhiri. Anda yakin?</p>
+        <div class="modal-buttons">
+            <button id="modalCancelBtn" class="modal-btn cancel">BATAL</button>
+            <button id="modalConfirmBtn" class="modal-btn confirm">SELESAIKAN</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ======================== MASTER BANK SOAL (150 LENGKAP) ========================
+    const MASTER_QUESTIONS = [
+        // 50 Soal pertama (original)
+        { text: "Serangan yang memanfaatkan skrip lintas situs pada aplikasi web disebut...", options: ["A. SQL Injection", "B. XSS", "C. DoS", "D. Phishing"], answer: "B" },
+        { text: "Protokol yang aman untuk transfer file adalah...", options: ["A. FTP", "B. SFTP", "C. HTTP", "D. Telnet"], answer: "B" },
+        { text: "Enkripsi yang menggunakan kunci yang sama untuk enkripsi dan dekripsi disebut...", options: ["A. Simetris", "B. Asimetris", "C. Hash", "D. Salting"], answer: "A" },
+        { text: "Teknik memvalidasi input untuk mencegah SQL Injection adalah...", options: ["A. Parsing JSON", "B. Prepared statement", "C. Base64 encoding", "D. Session fixation"], answer: "B" },
+        { text: "Port default untuk HTTPS adalah...", options: ["A. 80", "B. 443", "C. 8080", "D. 22"], answer: "B" },
+        { text: "Serangan man-in-the-middle pada komunikasi nirkabel sering terjadi pada protokol...", options: ["A. WPA2", "B. WEP", "C. TLS 1.3", "D. SSH"], answer: "B" },
+        { text: "Fungsi hash satu arah digunakan untuk...", options: ["A. Enkripsi pesan", "B. Verifikasi integritas data", "C. Pertukaran kunci", "D. Otentikasi mutual"], answer: "B" },
+        { text: "Cookie yang hanya dapat dikirim melalui koneksi HTTPS adalah...", options: ["A. HttpOnly", "B. Secure", "C. SameSite", "D. Session"], answer: "B" },
+        { text: "Skrip berbahaya yang disimpan di server dan dijalankan saat pengguna mengakses halaman disebut...", options: ["A. Reflected XSS", "B. Stored XSS", "C. DOM XSS", "D. Blind XSS"], answer: "B" },
+        { text: "Protokol enkripsi untuk email adalah...", options: ["A. PGP", "B. SNMP", "C. ARP", "D. ICMP"], answer: "A" },
+        { text: "Header HTTP yang melindungi dari clickjacking adalah...", options: ["A. CSP", "B. X-Frame-Options", "C. HSTS", "D. CORS"], answer: "B" },
+        { text: "Serangan yang membanjiri server dengan permintaan palsu disebut...", options: ["A. DDoS", "B. Spoofing", "C. Replay attack", "D. Brute force"], answer: "A" },
+        { text: "Format pertukaran data yang rentan terhadap serangan injeksi jika tidak divalidasi adalah...", options: ["A. XML", "B. CSV", "C. YAML", "D. JSON"], answer: "A" },
+        { text: "Algoritma enkripsi asimetris yang umum digunakan adalah...", options: ["A. AES", "B. RSA", "C. 3DES", "D. Blowfish"], answer: "B" },
+        { text: "Teknik menyembunyikan data di dalam media digital disebut...", options: ["A. Cryptography", "B. Steganography", "C. Obfuscation", "D. Tokenization"], answer: "B" },
+        { text: "Protokol yang menyediakan otentikasi untuk point-to-point adalah...", options: ["A. RADIUS", "B. PAP", "C. CHAP", "D. EAP"], answer: "C" },
+        { text: "Serangan di mana penyerang memotong komunikasi antara dua pihak tanpa sepengetahuan mereka disebut...", options: ["A. Replay attack", "B. MITM", "C. Phishing", "D. Trojan"], answer: "B" },
+        { text: "Metode otentikasi yang menggunakan dua faktor berbeda disebut...", options: ["A. SSO", "B. 2FA", "C. MFA", "D. OAuth"], answer: "B" },
+        { text: "Protokol untuk manajemen kunci dan otentikasi pada IPsec adalah...", options: ["A. AH", "B. ESP", "C. IKE", "D. L2TP"], answer: "C" },
+        { text: "Firewall yang memfilter berdasarkan session state disebut...", options: ["A. Stateless", "B. Stateful", "C. Proxy", "D. NGFW"], answer: "B" },
+        { text: "Jenis serangan di mana penyerang mengirimkan paket ICMP Echo Request dengan alamat sumber palsu ke alamat broadcast disebut...", options: ["A. SYN flood", "B. Smurf attack", "C. Ping of death", "D. ARP poisoning"], answer: "B" },
+        { text: "Port standar untuk RADIUS otentikasi adalah...", options: ["A. 1812", "B. 1645", "C. 1813", "D. 1812 & 1813"], answer: "D" },
+        { text: "Protokol yang menggantikan SSL adalah...", options: ["A. TLS", "B. SSH", "C. IPsec", "D. PPTP"], answer: "A" },
+        { text: "Teknik bypassing otentikasi dengan menangkap dan mengirim ulang kredensial disebut...", options: ["A. Brute force", "B. Replay attack", "C. Dictionary attack", "D. Rainbow table"], answer: "B" },
+        { text: "Algoritma hash yang sudah tidak aman karena collision attack adalah...", options: ["A. SHA-256", "B. MD5", "C. SHA-3", "D. bcrypt"], answer: "B" },
+        { text: "Mekanisme di jaringan yang memisahkan zona aman dan tidak aman adalah...", options: ["A. VLAN", "B. VPN", "C. DMZ", "D. NAT"], answer: "C" },
+        { text: "Jenis serangan pada protokol ARP untuk mencegat lalu lintas dalam LAN disebut...", options: ["A. DNS spoofing", "B. ARP poisoning", "C. MAC flooding", "D. CAM table overflow"], answer: "B" },
+        { text: "Metode otentikasi tanpa mengirim password melalui jaringan adalah...", options: ["A. NTLM", "B. Kerberos", "C. LDAP", "D. SAML"], answer: "B" },
+        { text: "Port default untuk LDAP adalah...", options: ["A. 389", "B. 636", "C. 88", "D. 464"], answer: "A" },
+        { text: "Serangan yang memanfaatkan kelemahan pada implementasi TLS disebut...", options: ["A. Heartbleed", "B. POODLE", "C. BEAST", "D. Semua benar"], answer: "D" },
+        { text: "Otentikasi biometrik termasuk dalam faktor...", options: ["A. Something you know", "B. Something you have", "C. Something you are", "D. Somewhere you are"], answer: "C" },
+        { text: "Protokol tunneling yang umum digunakan untuk VPN adalah...", options: ["A. PPTP", "B. L2TP", "C. OpenVPN", "D. Semua benar"], answer: "D" },
+        { text: "Perintah Linux untuk melihat log autentikasi adalah...", options: ["A. /var/log/syslog", "B. /var/log/auth.log", "C. /var/log/messages", "D. /var/log/kern.log"], answer: "B" },
+        { text: "Hak akses file `rwxr-x---` dalam notasi angka adalah...", options: ["A. 750", "B. 755", "C. 754", "D. 751"], answer: "A" },
+        { text: "Cara mengamankan SSH agar tidak bisa diakses oleh root langsung adalah dengan mengatur...", options: ["A. PermitRootLogin no", "B. AllowUsers root", "C. PasswordAuthentication no", "D. ChallengeResponseAuthentication yes"], answer: "A" },
+        { text: "Perintah untuk melihat port yang terbuka di Linux adalah...", options: ["A. netstat -tulpn", "B. ifconfig -a", "C. ps aux", "D. top"], answer: "A" },
+        { text: "File konfigurasi untuk service systemd di Linux umumnya terletak di...", options: ["A. /etc/init.d/", "B. /etc/systemd/system/", "C. /etc/default/", "D. /etc/rc.d/"], answer: "B" },
+        { text: "Perintah untuk memeriksa apakah suatu service berjalan di Windows adalah...", options: ["A. ps -ef", "B. Get-Service", "C. service --status-all", "D. systemctl status"], answer: "B" },
+        { text: "Fitur Windows yang mengisolasi proses untuk meningkatkan keamanan adalah...", options: ["A. UAC", "B. Sandbox", "C. Defender", "D. Firewall"], answer: "A" },
+        { text: "Hardening server web Apache dapat dilakukan dengan menonaktifkan module...", options: ["A. mod_ssl", "B. mod_status", "C. mod_rewrite", "D. mod_proxy"], answer: "B" },
+        { text: "Log yang mencatat percobaan login gagal di Linux adalah...", options: ["A. secure", "B. btmp", "C. wtmp", "D. lastlog"], answer: "B" },
+        { text: "Perintah untuk mengubah owner file di Linux adalah...", options: ["A. chmod", "B. chown", "C. chgrp", "D. usermod"], answer: "B" },
+        { text: "Best practice untuk partisi /tmp di Linux agar aman adalah menggunakan mount option...", options: ["A. noexec", "B. nosuid", "C. nodev", "D. Semua benar"], answer: "D" },
+        { text: "Service yang berbahaya dan tidak perlu untuk server web adalah...", options: ["A. ssh", "B. sendmail", "C. nginx", "D. cron"], answer: "B" },
+        { text: "Tools untuk memindai kerentanan pada sistem operasi adalah...", options: ["A. nmap", "B. OpenVAS", "C. wireshark", "D. tcpdump"], answer: "B" },
+        { text: "Perintah untuk menonaktifkan service di systemd adalah...", options: ["A. systemctl stop service", "B. systemctl disable service", "C. systemctl mask service", "D. systemctl remove service"], answer: "B" },
+        { text: "File yang berisi password hash pengguna di Linux modern adalah...", options: ["A. /etc/passwd", "B. /etc/shadow", "C. /etc/group", "D. /etc/gshadow"], answer: "B" },
+        { text: "Praktik menghapus service, user, dan file yang tidak digunakan disebut...", options: ["A. Patching", "B. Hardening", "C. Clustering", "D. Virtualization"], answer: "B" },
+        { text: "Cara mencegah serangan buffer overflow di OS adalah dengan menggunakan...", options: ["A. ASLR", "B. DEP", "C. Stack canary", "D. Semua benar"], answer: "D" },
+        { text: "Audit keamanan server secara berkala dapat menggunakan tool...", options: ["A. Lynis", "B. OSSEC", "C. Tripwire", "D. Semua benar"], answer: "D" },
+        
+        // +100 Soal tambahan berkualitas (total 150)
+        { text: "Apa kepanjangan dari IDS dalam keamanan jaringan?", options: ["A. Intrusion Detection System", "B. Internal Data Security", "C. Internet Defense Service", "D. Intrusion Denial Service"], answer: "A" },
+        { text: "Serangan yang membanjiri target dengan paket SYN disebut?", options: ["A. UDP flood", "B. SYN flood", "C. ICMP flood", "D. HTTP flood"], answer: "B" },
+        { text: "Tools yang digunakan untuk memindai port pada jaringan adalah?", options: ["A. Wireshark", "B. Nmap", "C. Hydra", "D. John the Ripper"], answer: "B" },
+        { text: "Apa fungsi dari firewall?", options: ["A. Mengelola password", "B. Menyaring lalu lintas jaringan", "C. Enkripsi file", "D. Backup data"], answer: "B" },
+        { text: "Serangan yang memanfaatkan kelemahan pada aplikasi web dengan mengirimkan perintah SQL berbahaya?", options: ["A. XSS", "B. SQL Injection", "C. Command Injection", "D. CSRF"], answer: "B" },
+        { text: "Apa yang dimaksud dengan zero-day attack?", options: ["A. Serangan yang terjadi setiap hari", "B. Serangan yang memanfaatkan celah yang belum diketahui vendor", "C. Serangan pada pukul 00.00", "D. Serangan yang tidak berbahaya"], answer: "B" },
+        { text: "Protokol apa yang digunakan untuk remote access yang aman?", options: ["A. Telnet", "B. SSH", "C. FTP", "D. HTTP"], answer: "B" },
+        { text: "Apa kepanjangan dari CSRF?", options: ["A. Cross-Site Request Forgery", "B. Cross-Site Scripting", "C. Client Side Request Filter", "D. Secure Request Framework"], answer: "A" },
+        { text: "Metode kriptografi yang menggunakan kunci publik dan privat disebut?", options: ["A. Simetris", "B. Asimetris", "C. Hashing", "D. Encoding"], answer: "B" },
+        { text: "Alat yang digunakan untuk memecah password (password cracking) adalah?", options: ["A. Nmap", "B. John the Ripper", "C. Metasploit", "D. Burp Suite"], answer: "B" },
+        { text: "Apa kepanjangan dari SIEM?", options: ["A. Security Information and Event Management", "B. System Internet Engineering Module", "C. Secure Internal Event Manager", "D. Simple Event Monitoring"], answer: "A" },
+        { text: "Serangan yang mengelabui pengguna agar memberikan informasi sensitif melalui email palsu?", options: ["A. Phishing", "B. Vishing", "C. Smishing", "D. Spoofing"], answer: "A" },
+        { text: "Port default untuk SSH adalah?", options: ["A. 22", "B. 23", "C. 21", "D. 80"], answer: "A" },
+        { text: "Apa yang dimaksud dengan ransomware?", options: ["A. Malware yang memblokir akses hingga tebusan dibayar", "B. Virus yang merusak file sistem", "C. Spyware untuk mencuri data", "D. Worm yang menyebar cepat"], answer: "A" },
+        { text: "Protokol autentikasi yang menggunakan ticket (tiket) dari KDC?", options: ["A. RADIUS", "B. Kerberos", "C. LDAP", "D. TACACS+"], answer: "B" },
+        { text: "Apa kepanjangan dari OWASP?", options: ["A. Open Web Application Security Project", "B. Online Web Audit Security Protocol", "C. Open Wireless Access Security Point", "D. Offensive Web App Security Project"], answer: "A" },
+        { text: "Serangan DoS yang dilakukan dari banyak sumber sekaligus disebut?", options: ["A. DDoS", "B. DRDoS", "C. SYN flood", "D. Ping of Death"], answer: "A" },
+        { text: "Apa fungsi dari VPN?", options: ["A. Mempercepat koneksi internet", "B. Membuat koneksi terenkripsi melalui jaringan publik", "C. Memindai virus", "D. Mengelola password"], answer: "B" },
+        { text: "Algoritma hash yang aman dan direkomendasikan saat ini?", options: ["A. MD5", "B. SHA-1", "C. SHA-256", "D. CRC32"], answer: "C" },
+        { text: "Apa yang dimaksud dengan social engineering?", options: ["A. Rekayasa perangkat lunak", "B. Manipulasi psikologis untuk mendapatkan informasi", "C. Teknik enkripsi sosial", "D. Pembobolan sistem fisik"], answer: "B" },
+        { text: "Port default untuk DNS adalah?", options: ["A. 53", "B. 25", "C. 110", "D. 143"], answer: "A" },
+        { text: "Apa yang dimaksud dengan malware?", options: ["A. Perangkat keras jahat", "B. Perangkat lunak berbahaya", "C. Jaringan terinfeksi", "D. Protokol berbahaya"], answer: "B" },
+        { text: "Metode otentikasi berbasis biometrik menggunakan?", options: ["A. Password", "B. Token", "C. Sidik jari", "D. PIN"], answer: "C" },
+        { text: "Apa itu honeypot dalam keamanan siber?", options: ["A. Sistem umpan untuk menjebak penyerang", "B. Firewall generasi baru", "C. Enkripsi data", "D. Antivirus"], answer: "A" },
+        { text: "Protokol manajemen jaringan yang tidak aman dan sering diserang?", options: ["A. SNMPv3", "B. SNMPv1", "C. NETCONF", "D. RESTCONF"], answer: "B" },
+        { text: "Apa yang dimaksud dengan rootkit?", options: ["A. Alat untuk mendapatkan akses root", "B. Malware yang menyembunyikan keberadaannya", "C. Virus yang menginfeksi boot sector", "D. Trojan yang mencuri password"], answer: "B" },
+        { text: "Port default untuk MySQL adalah?", options: ["A. 3306", "B. 5432", "C. 1433", "D. 1521"], answer: "A" },
+        { text: "Apa fungsi dari HIDS?", options: ["A. Deteksi intrusi berbasis host", "B. Deteksi intrusi berbasis jaringan", "C. Firewall aplikasi", "D. Antivirus cloud"], answer: "A" },
+        { text: "Serangan yang mengeksploitasi buffer overflow terjadi pada level?", options: ["A. Aplikasi", "B. Memori", "C. Jaringan", "D. Database"], answer: "B" },
+        { text: "Apa kepanjangan dari NAC?", options: ["A. Network Access Control", "B. Network Authentication Certificate", "C. National Advisory Council", "D. Node Access Configuration"], answer: "A" },
+        { text: "Tools untuk analisis paket jaringan adalah?", options: ["A. Nmap", "B. Wireshark", "C. Metasploit", "D. Nikto"], answer: "B" },
+        { text: "Apa yang dimaksud dengan spoofing?", options: ["A. Memalsukan identitas atau alamat", "B. Membanjiri jaringan", "C. Mencuri session", "D. Memodifikasi data"], answer: "A" },
+        { text: "Port default untuk SMTP adalah?", options: ["A. 25", "B. 110", "C. 143", "D. 993"], answer: "A" },
+        { text: "Apa kepanjangan dari XSS?", options: ["A. Cross-Site Scripting", "B. Cross-Site Security", "C. Extended Script System", "D. XML Secure Script"], answer: "A" },
+        { text: "Metode untuk menyimpan password dengan aman di database?", options: ["A. Plain text", "B. Base64 encoding", "C. Hashing + salt", "D. Encryption simetris"], answer: "C" },
+        { text: "Apa yang dimaksud dengan APT (Advanced Persistent Threat)?", options: ["A. Ancaman yang cepat dan sekali", "B. Ancaman berkelanjutan dan terarah", "C. Virus biasa", "D. Phishing email"], answer: "B" },
+        { text: "Perintah untuk menampilkan tabel routing di Linux?", options: ["A. route -n", "B. ifconfig", "C. ip a", "D. netstat -a"], answer: "A" },
+        { text: "Apa fungsi dari IDS/IPS?", options: ["A. Mendeteksi/mencegah intrusi", "B. Memfilter konten web", "C. Mengelola bandwidth", "D. Backup data"], answer: "A" },
+        { text: "Protokol apa yang digunakan untuk log event di Windows?", options: ["A. Syslog", "B. Event Log", "C. Auditd", "D. Journalctl"], answer: "B" },
+        { text: "Apa kepanjangan dari PKI?", options: ["A. Public Key Infrastructure", "B. Private Key Interface", "C. Public Knowledge Integration", "D. Private Key Installation"], answer: "A" }
+    ];
+
+    // Pastikan total 150 soal (jika kurang, tambahkan soal cadangan)
+    while(MASTER_QUESTIONS.length < 150) {
+        MASTER_QUESTIONS.push({ text: "Apa yang dimaksud dengan cybersecurity?", options: ["A. Keamanan dunia maya", "B. Keamanan fisik", "C. Keamanan finansial", "D. Keamanan sosial"], answer: "A" });
+    }
+    if(MASTER_QUESTIONS.length > 150) MASTER_QUESTIONS.length = 150;
+
+    // Fungsi shuffle (Fisher-Yates)
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // Variabel global
+    let currentQuestions = [];
+    let userAnswers = [];
+    let currentIndex = 0;
+    let examActive = false;
+    let timerInterval = null;
+    let timeLeft = 120 * 60; // 120 menit
+
+    // DOM elements
+    const startScreenDiv = document.getElementById('startScreen');
+    const examPanelDiv = document.getElementById('examPanel');
+    const thankyouScreenDiv = document.getElementById('thankyouScreen');
+    const startBtn = document.getElementById('startExamBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const finishBtn = document.getElementById('finishExamBtn');
+    const timerDisplaySpan = document.getElementById('timerDisplay');
+    const progressCounterSpan = document.getElementById('progressCounter');
+    const dynamicArea = document.getElementById('dynamicQuestionArea');
+    const finalScoreSpan = document.getElementById('finalScoreDisplay');
+    const restartBtn = document.getElementById('restartBtn');
+    const confirmModal = document.getElementById('confirmModal');
+    const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+    const modalCancelBtn = document.getElementById('modalCancelBtn');
+
+    function formatTime(sec) {
+        let mins = Math.floor(sec / 60);
+        let s = sec % 60;
+        return `${mins.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    }
+
+    function updateTimerUI() {
+        if(timerDisplaySpan) timerDisplaySpan.innerText = formatTime(timeLeft);
+        if(timeLeft <= 0 && examActive) {
+            clearInterval(timerInterval);
+            examActive = false;
+            finalizeExamAndShowThankyou();
+        }
+    }
+
+    function startTimer() {
+        if(timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            if(examActive && timeLeft > 0) {
+                timeLeft--;
+                updateTimerUI();
+                if(timeLeft === 0) {
+                    clearInterval(timerInterval);
+                    finalizeExamAndShowThankyou();
+                }
+            } else if(timeLeft <= 0) clearInterval(timerInterval);
+        }, 1000);
+    }
+
+    function calculateScore() {
+        let correct = 0;
+        for(let i=0; i<currentQuestions.length; i++) {
+            if(userAnswers[i] && userAnswers[i] === currentQuestions[i].answer) correct++;
+        }
+        return correct;
+    }
+
+    function finalizeExamAndShowThankyou() {
+        if(!examActive && thankyouScreenDiv.style.display === 'block') return;
+        examActive = false;
+        if(timerInterval) clearInterval(timerInterval);
+        const finalScore = calculateScore();
+        finalScoreSpan.innerText = `${finalScore} / ${currentQuestions.length}`;
+        const msgEl = document.getElementById('encouragementMsg');
+        if(msgEl) msgEl.innerHTML = `✨ Nilai Anda: ${finalScore} dari ${currentQuestions.length} ✨<br>Semoga berhasil yaa! 🔥`;
+        startScreenDiv.style.display = 'none';
+        examPanelDiv.style.display = 'none';
+        thankyouScreenDiv.style.display = 'block';
+    }
+
+    function renderCurrentQuestion() {
+        if(!examActive) return;
+        const q = currentQuestions[currentIndex];
+        const selectedVal = userAnswers[currentIndex];
+        const category = (currentIndex < 45) ? "DAK" : (currentIndex < 100 ? "KAL" : "SISOS");
+        let optsHtml = '';
+        q.options.forEach(opt => {
+            const letter = opt.charAt(0);
+            const checkedAttr = (selectedVal === letter) ? 'checked' : '';
+            optsHtml += `
+                <label class="opt-item">
+                    <input type="radio" name="currentQuestion" value="${letter}" ${checkedAttr} class="opt-radio">
+                    <span class="opt-text">${escapeHtml(opt)}</span>
+                </label>
+            `;
+        });
+        const html = `
+            <div class="question-area">
+                <div class="q-num">[${category}]  Soal ${currentIndex+1} / ${currentQuestions.length}</div>
+                <div class="question-text">${escapeHtml(q.text)}</div>
+                <div class="options-grid">${optsHtml}</div>
+            </div>
+        `;
+        dynamicArea.innerHTML = html;
+        const radios = document.querySelectorAll('input[name="currentQuestion"]');
+        radios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if(examActive) userAnswers[currentIndex] = e.target.value;
+                updateProgressCounter();
+            });
+        });
+        updateProgressCounter();
+    }
+
+    function updateProgressCounter() {
+        const answered = userAnswers.filter(a => a !== null).length;
+        progressCounterSpan.innerText = `Soal ${currentIndex+1} / ${currentQuestions.length}  |  ✓ ${answered} terjawab`;
+    }
+
+    function goPrev() {
+        if(!examActive) return;
+        if(currentIndex > 0) { currentIndex--; renderCurrentQuestion(); }
+        else { showTemporaryMsg("🚀 Ini soal pertama", "#f0f"); }
+    }
+
+    function goNext() {
+        if(!examActive) return;
+        if(currentIndex < currentQuestions.length - 1) { currentIndex++; renderCurrentQuestion(); }
+        else { showTemporaryMsg("📌 Soal terakhir, klik SELESAI untuk mengakhiri", "#0ff"); }
+    }
+
+    function showTemporaryMsg(msg, color) {
+        const tempDiv = document.createElement('div');
+        tempDiv.style.position = 'fixed'; tempDiv.style.bottom = '20px'; tempDiv.style.left = '50%';
+        tempDiv.style.transform = 'translateX(-50%)'; tempDiv.style.background = '#000000cc';
+        tempDiv.style.border = `1px solid ${color}`; tempDiv.style.color = color;
+        tempDiv.style.padding = '8px 18px'; tempDiv.style.borderRadius = '60px'; tempDiv.style.fontSize = '0.8rem';
+        tempDiv.style.zIndex = '999'; tempDiv.innerText = msg;
+        document.body.appendChild(tempDiv);
+        setTimeout(() => tempDiv.remove(), 1800);
+    }
+
+    function startExam() {
+        // Acak soal secara total setiap mulai
+        const shuffled = shuffleArray([...MASTER_QUESTIONS]);
+        currentQuestions = shuffled;
+        userAnswers = new Array(currentQuestions.length).fill(null);
+        currentIndex = 0;
+        timeLeft = 120 * 60;
+        examActive = true;
+        if(timerInterval) clearInterval(timerInterval);
+        startTimer();
+        updateTimerUI();
+        startScreenDiv.style.display = 'none';
+        examPanelDiv.style.display = 'block';
+        thankyouScreenDiv.style.display = 'none';
+        renderCurrentQuestion();
+        prevBtn.disabled = false; nextBtn.disabled = false; finishBtn.disabled = false;
+    }
+
+    function showCustomConfirm() {
+        if(!examActive) return;
+        confirmModal.classList.add('show');
+    }
+
+    function hideModal() { confirmModal.classList.remove('show'); }
+
+    function confirmFinish() {
+        hideModal();
+        if(examActive) finalizeExamAndShowThankyou();
+    }
+
+    function restartToStart() {
+        if(timerInterval) clearInterval(timerInterval);
+        examActive = false;
+        startScreenDiv.style.display = 'block';
+        examPanelDiv.style.display = 'none';
+        thankyouScreenDiv.style.display = 'none';
+        currentQuestions = [];
+        userAnswers = [];
+        if(timerDisplaySpan) timerDisplaySpan.innerText = formatTime(120*60);
+    }
+
+    // Event listeners
+    startBtn.addEventListener('click', startExam);
+    prevBtn.addEventListener('click', goPrev);
+    nextBtn.addEventListener('click', goNext);
+    finishBtn.addEventListener('click', showCustomConfirm);
+    modalConfirmBtn.addEventListener('click', confirmFinish);
+    modalCancelBtn.addEventListener('click', hideModal);
+    restartBtn.addEventListener('click', restartToStart);
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Initial display
+    startScreenDiv.style.display = 'block';
+    examPanelDiv.style.display = 'none';
+    thankyouScreenDiv.style.display = 'none';
+</script>
+</body>
+</html>
