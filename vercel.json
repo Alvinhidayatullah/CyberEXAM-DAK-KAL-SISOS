@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "cyber-exam-150",
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
+  ]
+}
