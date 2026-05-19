@@ -535,7 +535,7 @@
             <span class="badge-cyber">⚡ SISOS</span>
             <span class="badge-cyber">⚡ KAL</span>
         </div>
-        <p style="color:#9bb4ff;" id="totalSoalInfo">11 Soal Keamanan Siber | 120 Menit</p>
+        <p style="color:#9bb4ff;" id="totalSoalInfo">Memuat...</p>
         <p style="color:#0ff9; font-size:0.8rem;">⟡ Waktu Berjalan Setelah Mulai ⟡</p>
         <button id="startExamBtn" class="btn-cyber">⟢ MULAI UJIAN ⟣</button>
         <div class="footer-note">© Cyber Training 2026 | Vinnzz</div>
@@ -584,76 +584,15 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="soal.js"></script>
 <script>
-    // ======================== DATA SOAL LANGSUNG DI SINI ========================
-    const MASTER_QUESTIONS = [
-        {
-            "text": "SQL Injection biasanya terjadi karena?",
-            "correctAnswer": "A",
-            "correctText": "Input tidak divalidasi",
-            "options": ["A. Input tidak divalidasi", "B. HTTPS aktif", "C. Firewall aktif", "D. DNS error"]
-        },
-        {
-            "text": "Pada exploit modern Linux x64, register yang biasa digunakan untuk argumen pertama fungsi menurut calling convention System V AMD64 adalah?",
-            "correctAnswer": "C",
-            "correctText": "RDI",
-            "options": ["A. RAX", "B. RBX", "C. RDI", "D. RSP"]
-        },
-        {
-            "text": "Dalam exploit mitigasi modern, teknik ret2libc digunakan untuk?",
-            "correctAnswer": "A",
-            "correctText": "Menjalankan fungsi libc seperti system()",
-            "options": ["A. Menjalankan fungsi libc seperti system()", "B. Menghapus ASLR", "C. Mematikan DEP permanen", "D. Bypass DNS filtering"]
-        },
-        {
-            "text": "Mengapa attacker sering menargetkan deserialization vulnerability?",
-            "correctAnswer": "A",
-            "correctText": "Dapat menyebabkan remote code execution",
-            "options": ["A. Dapat menyebabkan remote code execution", "B. Menambah bandwidth server", "C. Menghapus cookie browser", "D. Membuat TLS lebih lemah"]
-        },
-        {
-            "text": "Dalam cryptography, reuse nonce pada AES-GCM berbahaya karena?",
-            "correctAnswer": "A",
-            "correctText": "Dapat merusak confidentiality dan integrity",
-            "options": ["A. Dapat merusak confidentiality dan integrity", "B. Membuat file lebih besar", "C. Menambah latency", "D. Menghapus digital signature"]
-        },
-        {
-            "text": "Teknik DLL Hijacking pada Windows memanfaatkan?",
-            "correctAnswer": "A",
-            "correctText": "Urutan pencarian DLL oleh aplikasi",
-            "options": ["A. Urutan pencarian DLL oleh aplikasi", "B. DNS cache poisoning", "C. Kernel panic", "D. TLS downgrade"]
-        },
-        {
-            "text": "Apa risiko utama dari insecure deserialization di Java menggunakan `readObject()`?",
-            "correctAnswer": "A",
-            "correctText": "Arbitrary code execution",
-            "options": ["A. Arbitrary code execution", "B. Packet loss", "C. DNS leak", "D. Session timeout"]
-        },
-        {
-            "text": "Pada Active Directory, unconstrained delegation berbahaya karena?",
-            "correctAnswer": "A",
-            "correctText": "Ticket Kerberos dapat dicuri dan disalahgunakan",
-            "options": ["A. Ticket Kerberos dapat dicuri dan disalahgunakan", "B. Menambah bandwidth domain", "C. Menghapus GPO", "D. Mempercepat login user"]
-        },
-        {
-            "text": "Teknik \"Process Hollowing\" pada malware dilakukan dengan?",
-            "correctAnswer": "A",
-            "correctText": "Mengganti memory process legitimate dengan payload malicious",
-            "options": ["A. Mengganti memory process legitimate dengan payload malicious", "B. Menghapus process dari kernel", "C. Membuat DNS tunnel", "D. Menambah privilege cloud"]
-        },
-        {
-            "text": "Side-channel attack seperti Spectre dan Meltdown mengeksploitasi?",
-            "correctAnswer": "A",
-            "correctText": "Perilaku speculative execution CPU",
-            "options": ["A. Perilaku speculative execution CPU", "B. SQL parser", "C. Firewall rule", "D. DNS recursion"]
-        },
-        {
-            "text": "Dalam HTTP/2, vulnerability \"Rapid Reset\" menyebabkan?",
-            "correctAnswer": "A",
-            "correctText": "DDoS exhaustion pada server HTTP/2",
-            "options": ["A. DDoS exhaustion pada server HTTP/2", "B. SQL Injection otomatis", "C. TLS certificate bypass", "D. Kerberos relay attack"]
-        }
-    ];
+    // ======================== CEK APAKAH SOAL BERHASIL DIMUAT ========================
+    if (typeof MASTER_QUESTIONS === 'undefined') {
+        console.error("ERROR: File soal.js tidak ditemukan atau MASTER_QUESTIONS tidak terdefinisi!");
+        document.getElementById('totalSoalInfo').innerHTML = "❌ GAGAL MEMUAT SOAL! Periksa file soal.js";
+    } else {
+        document.getElementById('totalSoalInfo').innerHTML = MASTER_QUESTIONS.length + " Soal Keamanan Siber | 120 Menit";
+    }
 
     // ======================== PARTIKEL ANIMASI ========================
     function createParticles() {
@@ -967,10 +906,10 @@
     }
 
     function startExam() {
-        if (MASTER_QUESTIONS.length === 0) {
+        if (typeof MASTER_QUESTIONS === 'undefined' || MASTER_QUESTIONS.length === 0) {
             Swal.fire({
                 title: 'ERROR!',
-                text: 'Data soal tidak ditemukan.',
+                text: 'Data soal tidak ditemukan. Periksa file soal.js',
                 icon: 'error',
                 background: '#0a0f1f',
                 color: '#ff4444'
