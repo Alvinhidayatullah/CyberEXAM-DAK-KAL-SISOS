@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>CYBER TRAINING | DAK • KAL • SISOS</title>
-    <!-- SweetAlert2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <style>
-        /* SEMUA STYLE SAMA SEPERTI SEBELUMNYA */
         * {
             margin: 0;
             padding: 0;
@@ -18,12 +15,8 @@
             background: radial-gradient(circle at 20% 10%, #03050f, #000000);
             font-family: 'Share Tech Mono', 'Courier New', 'Fira Code', monospace;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            position: relative;
-            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
         }
 
         .cyber-bg {
@@ -67,42 +60,12 @@
                 transparent 2px, 
                 transparent 8px);
             animation: scanline 8s linear infinite;
+            pointer-events: none;
         }
         
         @keyframes scanline {
             0% { transform: translateY(0); }
             100% { transform: translateY(100%); }
-        }
-        
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-        
-        .particle {
-            position: absolute;
-            background: radial-gradient(circle, #0ff, transparent);
-            border-radius: 50%;
-            opacity: 0;
-            animation: floatParticle linear infinite;
-        }
-        
-        @keyframes floatParticle {
-            0% {
-                opacity: 0;
-                transform: translateY(100vh) scale(0);
-            }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.6; }
-            100% {
-                opacity: 0;
-                transform: translateY(-20vh) scale(1.5);
-            }
         }
         
         .neon-pulse {
@@ -137,12 +100,21 @@
             100% { transform: scale(1); opacity: 0.3; }
         }
 
+        #root {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        /* CSS Components */
         .app-container {
             width: 100%;
             max-width: 850px;
             margin: 0 auto;
-            position: relative;
-            z-index: 10;
         }
 
         .mute-button {
@@ -165,11 +137,6 @@
             align-items: center;
             gap: 8px;
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-        }
-        
-        .mute-button:active, .btn-cyber:active, .nav-btn:active, .close-result:active {
-            transform: scale(0.95);
-            transition: transform 0.05s ease;
         }
         
         .mute-button:hover {
@@ -519,524 +486,15 @@
     </style>
 </head>
 <body>
-
 <div class="cyber-bg"></div>
 <div class="neon-pulse"></div>
 <div class="neon-pulse-2"></div>
-<div class="particles" id="particles"></div>
+<div id="root"></div>
 
-<button id="muteBtn" class="mute-button">🔊 MUSIC ON</button>
-
-<div class="app-container" id="appRoot">
-    <div id="startScreen" class="cyber-card start-screen">
-        <div class="glitch">CYBER TRAINING</div>
-        <div class="badge-container">
-            <span class="badge-cyber">⚡ DAK</span>
-            <span class="badge-cyber">⚡ SISOS</span>
-            <span class="badge-cyber">⚡ KAL</span>
-        </div>
-        <p style="color:#9bb4ff;" id="totalSoalInfo">Memuat...</p>
-        <p style="color:#0ff9; font-size:0.8rem;">⟡ Waktu Berjalan Setelah Mulai ⟡</p>
-        <button id="startExamBtn" class="btn-cyber">⟢ MULAI UJIAN ⟣</button>
-        <div class="footer-note">© Cyber Training 2026 | Vinnzz</div>
-    </div>
-
-    <div id="examPanel" style="display: none;">
-        <div class="cyber-card">
-            <div class="status-bar">
-                <div class="timer-neon" id="timerDisplay">00:00</div>
-                <div class="q-counter" id="progressCounter">Soal 1 / 0</div>
-            </div>
-            <div id="dynamicQuestionArea"></div>
-            <div class="nav-buttons">
-                <button id="prevBtn" class="nav-btn">◀ SEBELUM</button>
-                <button id="nextBtn" class="nav-btn primary">BERIKUT ▶</button>
-                <button id="finishExamBtn" class="nav-btn submit-final">✔ SELESAI</button>
-            </div>
-            <div class="footer-note"># Jawaban Akan Tersimpan Secara Otomatis</div>
-        </div>
-    </div>
-
-    <div id="thankyouScreen" style="display: none;">
-        <div class="cyber-card thankyou-screen">
-            <div class="glitch" style="font-size:clamp(1.3rem,5vw,2rem);">⚡ TERIMA KASIH ⚡</div>
-            <p style="color:#b9f2ff;">Telah Mengikuti Pelatihan Ujian Siber</p>
-            <div class="score-glow" id="finalScoreDisplay">0 / 100</div>
-            <div class="message-motivation" id="motivationMessage"></div>
-            <button id="showResultBtn" class="btn-cyber" style="margin-top:20px;">📋 LIHAT KUNCI JAWABAN</button>
-            <button id="restartBtn" class="btn-cyber" style="margin-top:12px;">⟳ KERJAKAN ULANG</button>
-            <div class="footer-note">© Cyber Training 2026</div>
-        </div>
-    </div>
-</div>
-
-<div id="resultModal" class="result-modal">
-    <div class="result-card">
-        <div class="result-header">
-            <h3>📋 KUNCI JAWABAN & HASIL ANDA</h3>
-            <div class="result-score" id="resultScore"></div>
-        </div>
-        <div class="result-list-container" id="resultListContainer">
-            <div id="resultList"></div>
-        </div>
-        <button id="closeResultBtn" class="close-result">TUTUP</button>
-    </div>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="soal.js"></script>
-<script>
-    // ======================== CEK APAKAH SOAL BERHASIL DIMUAT ========================
-    if (typeof MASTER_QUESTIONS === 'undefined') {
-        console.error("ERROR: File soal.js tidak ditemukan atau MASTER_QUESTIONS tidak terdefinisi!");
-        document.getElementById('totalSoalInfo').innerHTML = "❌ GAGAL MEMUAT SOAL! Periksa file soal.js";
-    } else {
-        document.getElementById('totalSoalInfo').innerHTML = MASTER_QUESTIONS.length + " Soal Keamanan Siber | 120 Menit";
-    }
-
-    // ======================== PARTIKEL ANIMASI ========================
-    function createParticles() {
-        const particlesContainer = document.getElementById('particles');
-        const particleCount = 40;
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            const size = Math.random() * 4 + 2;
-            particle.style.width = size + 'px';
-            particle.style.height = size + 'px';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDuration = Math.random() * 8 + 5 + 's';
-            particle.style.animationDelay = Math.random() * 5 + 's';
-            particlesContainer.appendChild(particle);
-        }
-    }
-    createParticles();
-    
-    // ======================== MUSIC PLAYLIST ========================
-    const musicPlaylist = [
-        "https://c.top4top.io/m_3791la5iu1.mp3",
-        "https://d.top4top.io/m_3791wgjxn2.mp3",
-        "https://e.top4top.io/m_3791mf0hv3.mp3",
-        "https://k.top4top.io/m_3791lnhyo1.mp3",
-        "https://l.top4top.io/m_37919ybf22.mp3",
-        "https://b.top4top.io/m_3791kjno03.mp3",
-        "https://c.top4top.io/m_3791p52bw4.mp3",
-        "https://f.top4top.io/m_3791a0zge1.mp3",
-        "https://g.top4top.io/m_3791mf4c32.mp3",
-        "https://h.top4top.io/m_379112fuk3.mp3"
-    ];
-    
-    function shuffleArray(arr) {
-        const shuffled = [...arr];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
-    }
-    
-    let currentPlaylist = [];
-    let currentTrackIndex = 0;
-    let isMuted = false;
-    let audioElement = null;
-    let isPlaying = false;
-    
-    function initNewPlaylist() {
-        currentPlaylist = shuffleArray(musicPlaylist);
-        currentTrackIndex = 0;
-    }
-    
-    function playCurrentTrack() {
-        if (!audioElement || currentPlaylist.length === 0) return;
-        const trackSrc = currentPlaylist[currentTrackIndex];
-        audioElement.src = trackSrc;
-        if (!isMuted) {
-            const playPromise = audioElement.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(err => console.log("Play error:", err));
-            }
-        }
-    }
-    
-    function playNextTrack() {
-        if (!audioElement) return;
-        currentTrackIndex++;
-        if (currentTrackIndex >= currentPlaylist.length) {
-            initNewPlaylist();
-        }
-        playCurrentTrack();
-    }
-    
-    function initAudio() {
-        audioElement = new Audio();
-        audioElement.volume = 0.4;
-        audioElement.loop = false;
-        audioElement.addEventListener('ended', () => playNextTrack());
-        audioElement.addEventListener('error', () => playNextTrack());
-    }
-    
-    function startMusic() {
-        if (!audioElement) initAudio();
-        initNewPlaylist();
-        playCurrentTrack();
-    }
-    startMusic();
-    
-    const tryAutoplay = () => {
-        if (!isPlaying && !isMuted && audioElement && audioElement.src) {
-            audioElement.play().then(() => isPlaying = true).catch(e => console.log("Still blocked"));
-        }
-        document.removeEventListener('click', tryAutoplay);
-        document.removeEventListener('touchstart', tryAutoplay);
-    };
-    document.addEventListener('click', tryAutoplay);
-    document.addEventListener('touchstart', tryAutoplay);
-    
-    const muteBtn = document.getElementById('muteBtn');
-    muteBtn.addEventListener('click', () => {
-        if (audioElement) {
-            if (isMuted) {
-                audioElement.volume = 0.4;
-                audioElement.play().then(() => isPlaying = true).catch(e => console.log("Playback error"));
-                isMuted = false;
-                muteBtn.innerHTML = "🔊 MUSIC ON";
-                muteBtn.style.color = "#0ff";
-                muteBtn.style.borderColor = "#0ff";
-            } else {
-                audioElement.pause();
-                isPlaying = false;
-                isMuted = true;
-                muteBtn.innerHTML = "🔇 MUSIC OFF";
-                muteBtn.style.color = "#f0f";
-                muteBtn.style.borderColor = "#f0f";
-            }
-        }
-    });
-    
-    // ======================== VARIABEL GLOBAL ========================
-    let currentQuestions = [];
-    let shuffledOptionsList = [];
-    let userAnswers = [];
-    let currentIndex = 0;
-    let examActive = false;
-    let timerInterval = null;
-    let timeLeft = 120 * 60;
-    let finalScore = 0;
-
-    const startScreenDiv = document.getElementById('startScreen');
-    const examPanelDiv = document.getElementById('examPanel');
-    const thankyouScreenDiv = document.getElementById('thankyouScreen');
-    const startBtn = document.getElementById('startExamBtn');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const finishBtn = document.getElementById('finishExamBtn');
-    const timerDisplaySpan = document.getElementById('timerDisplay');
-    const progressCounterSpan = document.getElementById('progressCounter');
-    const dynamicArea = document.getElementById('dynamicQuestionArea');
-    const finalScoreSpan = document.getElementById('finalScoreDisplay');
-    const motivationMsgSpan = document.getElementById('motivationMessage');
-    const restartBtn = document.getElementById('restartBtn');
-    const showResultBtn = document.getElementById('showResultBtn');
-    const resultModal = document.getElementById('resultModal');
-    const closeResultBtn = document.getElementById('closeResultBtn');
-    const resultList = document.getElementById('resultList');
-    const resultScoreSpan = document.getElementById('resultScore');
-
-    function formatTime(sec) {
-        let mins = Math.floor(sec / 60);
-        let s = sec % 60;
-        return `${mins.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-    }
-
-    function updateTimerUI() {
-        if(timerDisplaySpan) timerDisplaySpan.innerText = formatTime(timeLeft);
-        if(timeLeft <= 0 && examActive) {
-            clearInterval(timerInterval);
-            examActive = false;
-            finalizeExamAndShowThankyou();
-        }
-    }
-
-    function startTimer() {
-        if(timerInterval) clearInterval(timerInterval);
-        timerInterval = setInterval(() => {
-            if(examActive && timeLeft > 0) {
-                timeLeft--;
-                updateTimerUI();
-                if(timeLeft === 0) {
-                    clearInterval(timerInterval);
-                    finalizeExamAndShowThankyou();
-                }
-            } else if(timeLeft <= 0) clearInterval(timerInterval);
-        }, 1000);
-    }
-
-    function calculateCorrectCount() {
-        let correct = 0;
-        for(let i=0; i<currentQuestions.length; i++) {
-            if(userAnswers[i] && userAnswers[i] === shuffledOptionsList[i].newAnswer) correct++;
-        }
-        return correct;
-    }
-
-    function calculatePercentageScore() {
-        const correct = calculateCorrectCount();
-        if (currentQuestions.length === 0) return 0;
-        const rawScore = (correct / currentQuestions.length) * 100;
-        return Math.round(rawScore * 10) / 10;
-    }
-
-    function finalizeExamAndShowThankyou() {
-        if(!examActive && thankyouScreenDiv.style.display === 'block') return;
-        examActive = false;
-        if(timerInterval) clearInterval(timerInterval);
-        
-        finalScore = calculateCorrectCount();
-        const percentageScore = calculatePercentageScore();
-        
-        finalScoreSpan.innerText = `${percentageScore} / 100`;
-        
-        let message = "";
-        if (percentageScore === 100) message = "🏆 SEMPURNA! Anda Hebat! 🏆";
-        else if (percentageScore >= 85) message = "🏅 LUAR BIASA! Anda menguasai materi! 🏅";
-        else if (percentageScore >= 70) message = "🔥 SANGAT BAIK! Pertahankan! 🔥";
-        else if (percentageScore >= 60) message = "✨ CUKUP BAIK, tingkatkan lagi! ✨";
-        else if (percentageScore >= 50) message = "📚 Belajar lagi, Anda pasti bisa! 📚";
-        else message = "💪 Jangan menyerah! Pelajari ulang dan coba lagi! 💪";
-        
-        motivationMsgSpan.innerHTML = `✨ Nilai Anda: ${percentageScore} dari 100 ✨<br>${message}`;
-        
-        startScreenDiv.style.display = 'none';
-        examPanelDiv.style.display = 'none';
-        thankyouScreenDiv.style.display = 'block';
-    }
-
-    function shuffleArraySoal(arr) {
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-    }
-
-    function shuffleOptions(question) {
-        const options = [...question.options];
-        const correctTextValue = question.correctText;
-        for (let i = options.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [options[i], options[j]] = [options[j], options[i]];
-        }
-        let newCorrectLetter = "";
-        for(let i = 0; i < options.length; i++) {
-            if(options[i] === correctTextValue || options[i].includes(correctTextValue)) {
-                newCorrectLetter = String.fromCharCode(65 + i);
-                break;
-            }
-        }
-        return { shuffledOptions: options, newAnswer: newCorrectLetter };
-    }
-
-     function renderCurrentQuestion() {
-    if(!examActive) return;
-    const q = currentQuestions[currentIndex];
-    const shuffledData = shuffledOptionsList[currentIndex];
-    const selectedVal = userAnswers[currentIndex];
-    const category = ["DAK", "KAL", "SISOS"][currentIndex % 3];
-    
-    let optsHtml = '';
-    shuffledData.shuffledOptions.forEach((opt, idx) => {
-        const letter = String.fromCharCode(65 + idx);
-        const checkedAttr = (selectedVal === letter) ? 'checked' : '';
-        // HAPUS prefix A., B., C., D. yang mungkin sudah ada di opt
-        let cleanOpt = opt.replace(/^[A-D]\.\s*/, '');
-        optsHtml += `
-            <label class="opt-item">
-                <input type="radio" name="currentQuestion" value="${letter}" ${checkedAttr} class="opt-radio">
-                <span class="opt-text">${letter}. ${escapeHtml(cleanOpt)}</span>
-            </label>
-        `;
-    });
-    
-    const html = `
-        <div class="question-area">
-            <div class="q-num">[${category}]  Soal ${currentIndex+1} / ${currentQuestions.length}</div>
-            <div class="question-text">${escapeHtml(q.text)}</div>
-            <div class="options-grid">${optsHtml}</div>
-        </div>
-    `;
-    dynamicArea.innerHTML = html;
-    
-    const radios = document.querySelectorAll('input[name="currentQuestion"]');
-    radios.forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            if(examActive) {
-                userAnswers[currentIndex] = e.target.value;
-                updateProgressCounter();
-            }
-        });
-    });
-    updateProgressCounter();
-}
-
-    function updateProgressCounter() {
-        const answered = userAnswers.filter(a => a !== null && a !== undefined).length;
-        progressCounterSpan.innerText = `Soal ${currentIndex+1} / ${currentQuestions.length}  |  ✓ ${answered} terjawab`;
-    }
-
-    function goPrev() {
-        if(!examActive) return;
-        if(currentIndex > 0) { currentIndex--; renderCurrentQuestion(); }
-        else { showTemporaryMsg("🚀 Ini soal pertama", "#f0f"); }
-    }
-
-    function goNext() {
-        if(!examActive) return;
-        if(currentIndex < currentQuestions.length - 1) { currentIndex++; renderCurrentQuestion(); }
-        else { showTemporaryMsg("📌 Soal terakhir, klik SELESAI", "#0ff"); }
-    }
-
-    function showTemporaryMsg(msg, color) {
-        const tempDiv = document.createElement('div');
-        tempDiv.style.position = 'fixed'; tempDiv.style.bottom = '20px'; tempDiv.style.left = '50%';
-        tempDiv.style.transform = 'translateX(-50%)'; tempDiv.style.background = '#000000cc';
-        tempDiv.style.border = `1px solid ${color}`; tempDiv.style.color = color;
-        tempDiv.style.padding = '8px 18px'; tempDiv.style.borderRadius = '60px'; tempDiv.style.fontSize = '0.8rem';
-        tempDiv.style.zIndex = '999'; tempDiv.style.fontFamily = 'monospace'; tempDiv.style.fontWeight = 'bold';
-        tempDiv.innerText = msg;
-        document.body.appendChild(tempDiv);
-        setTimeout(() => tempDiv.remove(), 1800);
-    }
-
-    function startExam() {
-        if (typeof MASTER_QUESTIONS === 'undefined' || MASTER_QUESTIONS.length === 0) {
-            Swal.fire({
-                title: 'ERROR!',
-                text: 'Data soal tidak ditemukan. Periksa file soal.js',
-                icon: 'error',
-                background: '#0a0f1f',
-                color: '#ff4444'
-            });
-            return;
-        }
-        
-        const shuffled = shuffleArraySoal([...MASTER_QUESTIONS]);
-        currentQuestions = shuffled;
-        shuffledOptionsList = [];
-        for(let q of currentQuestions) {
-            shuffledOptionsList.push(shuffleOptions(q));
-        }
-        userAnswers = new Array(currentQuestions.length).fill(null);
-        currentIndex = 0;
-        timeLeft = 120 * 60;
-        examActive = true;
-        if(timerInterval) clearInterval(timerInterval);
-        startTimer();
-        updateTimerUI();
-        startScreenDiv.style.display = 'none';
-        examPanelDiv.style.display = 'block';
-        thankyouScreenDiv.style.display = 'none';
-        renderCurrentQuestion();
-    }
-
-     function showResult() {
-    const percentageScore = calculatePercentageScore();
-    resultScoreSpan.innerText = `✨ SKOR: ${percentageScore} / 100 ✨`;
-    let html = '';
-    for(let i = 0; i < currentQuestions.length; i++) {
-        const q = currentQuestions[i];
-        const shuffledData = shuffledOptionsList[i];
-        const userAnswerLetter = userAnswers[i];
-        const correctLetter = shuffledData.newAnswer;
-        const isCorrect = (userAnswerLetter === correctLetter);
-        
-        // Format jawaban dengan huruf
-        let userAnswerText = "Tidak dijawab";
-        let userAnswerDisplay = "";
-        if(userAnswerLetter) {
-            const idx = userAnswerLetter.charCodeAt(0) - 65;
-            const rawAnswerText = shuffledData.shuffledOptions[idx] || "Tidak diketahui";
-            // Bersihkan prefix yang mungkin ada
-            const cleanAnswerText = rawAnswerText.replace(/^[A-D]\.\s*/, '');
-            userAnswerDisplay = `${userAnswerLetter}. ${cleanAnswerText}`;
-            userAnswerText = rawAnswerText;
-        } else {
-            userAnswerDisplay = "Tidak dijawab";
-        }
-        
-        const correctIdx = correctLetter.charCodeAt(0) - 65;
-        const rawCorrectText = shuffledData.shuffledOptions[correctIdx];
-        const cleanCorrectText = rawCorrectText.replace(/^[A-D]\.\s*/, '');
-        const correctAnswerDisplay = `${correctLetter}. ${cleanCorrectText}`;
-        
-        html += `
-            <div class="result-item ${isCorrect ? 'correct' : 'wrong'}">
-                <div class="result-question"><strong>Soal ${i+1}:</strong> ${escapeHtml(q.text)}</div>
-                <div class="result-answer">📌 <span>Jawaban Anda:</span> ${escapeHtml(userAnswerDisplay)}</div>
-                <div class="result-answer">✅ <span>Jawaban Benar:</span> ${escapeHtml(correctAnswerDisplay)}</div>
-            </div>
-        `;
-    }
-    resultList.innerHTML = html;
-    resultModal.classList.add('show');
-}
-
-    function hideResult() {
-        resultModal.classList.remove('show');
-    }
-
-    function restartToStart() {
-        if(timerInterval) clearInterval(timerInterval);
-        examActive = false;
-        startScreenDiv.style.display = 'block';
-        examPanelDiv.style.display = 'none';
-        thankyouScreenDiv.style.display = 'none';
-        currentQuestions = [];
-        shuffledOptionsList = [];
-        userAnswers = [];
-        if(timerDisplaySpan) timerDisplaySpan.innerText = formatTime(120*60);
-    }
-
-    finishBtn.addEventListener('click', async () => {
-        if(examActive) {
-            const result = await Swal.fire({
-                title: '⚠️ SELESAI UJIAN?',
-                text: "Semua jawaban akan dinilai dan sesi diakhiri. Anda yakin?",
-                icon: 'question',
-                background: '#0a0f1f',
-                color: '#0ff',
-                confirmButtonColor: '#f0f',
-                cancelButtonColor: '#0ff',
-                confirmButtonText: 'YA, SELESAI!',
-                cancelButtonText: 'BATAL',
-                showCancelButton: true,
-                backdrop: `rgba(0,0,0,0.8)`
-            });
-            if (result.isConfirmed) {
-                finalizeExamAndShowThankyou();
-            }
-        }
-    });
-
-    startBtn.addEventListener('click', startExam);
-    prevBtn.addEventListener('click', goPrev);
-    nextBtn.addEventListener('click', goNext);
-    showResultBtn.addEventListener('click', showResult);
-    closeResultBtn.addEventListener('click', hideResult);
-    restartBtn.addEventListener('click', restartToStart);
-
-    function escapeHtml(str) {
-        if(!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if(m === '&') return '&amp;';
-            if(m === '<') return '&lt;';
-            if(m === '>') return '&gt;';
-            return m;
-        });
-    }
-
-    startScreenDiv.style.display = 'block';
-    examPanelDiv.style.display = 'none';
-    thankyouScreenDiv.style.display = 'none';
-</script>
+<script src="app.js"></script>
 </body>
 </html>
