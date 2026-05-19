@@ -836,45 +836,47 @@
         return { shuffledOptions: options, newAnswer: newCorrectLetter };
     }
 
-    function renderCurrentQuestion() {
-        if(!examActive) return;
-        const q = currentQuestions[currentIndex];
-        const shuffledData = shuffledOptionsList[currentIndex];
-        const selectedVal = userAnswers[currentIndex];
-        const category = ["DAK", "KAL", "SISOS"][currentIndex % 3];
-        
-        let optsHtml = '';
-        shuffledData.shuffledOptions.forEach((opt, idx) => {
-            const letter = String.fromCharCode(65 + idx);
-            const checkedAttr = (selectedVal === letter) ? 'checked' : '';
-            optsHtml += `
-                <label class="opt-item">
-                    <input type="radio" name="currentQuestion" value="${letter}" ${checkedAttr} class="opt-radio">
-                    <span class="opt-text">${letter}. ${escapeHtml(opt)}</span>
-                </label>
-            `;
-        });
-        
-        const html = `
-            <div class="question-area">
-                <div class="q-num">[${category}]  Soal ${currentIndex+1} / ${currentQuestions.length}</div>
-                <div class="question-text">${escapeHtml(q.text)}</div>
-                <div class="options-grid">${optsHtml}</div>
-            </div>
+     function renderCurrentQuestion() {
+    if(!examActive) return;
+    const q = currentQuestions[currentIndex];
+    const shuffledData = shuffledOptionsList[currentIndex];
+    const selectedVal = userAnswers[currentIndex];
+    const category = ["DAK", "KAL", "SISOS"][currentIndex % 3];
+    
+    let optsHtml = '';
+    shuffledData.shuffledOptions.forEach((opt, idx) => {
+        const letter = String.fromCharCode(65 + idx);
+        const checkedAttr = (selectedVal === letter) ? 'checked' : '';
+        // HAPUS prefix A., B., C., D. yang mungkin sudah ada di opt
+        let cleanOpt = opt.replace(/^[A-D]\.\s*/, '');
+        optsHtml += `
+            <label class="opt-item">
+                <input type="radio" name="currentQuestion" value="${letter}" ${checkedAttr} class="opt-radio">
+                <span class="opt-text">${letter}. ${escapeHtml(cleanOpt)}</span>
+            </label>
         `;
-        dynamicArea.innerHTML = html;
-        
-        const radios = document.querySelectorAll('input[name="currentQuestion"]');
-        radios.forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                if(examActive) {
-                    userAnswers[currentIndex] = e.target.value;
-                    updateProgressCounter();
-                }
-            });
+    });
+    
+    const html = `
+        <div class="question-area">
+            <div class="q-num">[${category}]  Soal ${currentIndex+1} / ${currentQuestions.length}</div>
+            <div class="question-text">${escapeHtml(q.text)}</div>
+            <div class="options-grid">${optsHtml}</div>
+        </div>
+    `;
+    dynamicArea.innerHTML = html;
+    
+    const radios = document.querySelectorAll('input[name="currentQuestion"]');
+    radios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if(examActive) {
+                userAnswers[currentIndex] = e.target.value;
+                updateProgressCounter();
+            }
         });
-        updateProgressCounter();
-    }
+    });
+    updateProgressCounter();
+}
 
     function updateProgressCounter() {
         const answered = userAnswers.filter(a => a !== null && a !== undefined).length;
@@ -936,36 +938,47 @@
         renderCurrentQuestion();
     }
 
-    function showResult() {
-        const percentageScore = calculatePercentageScore();
-        resultScoreSpan.innerText = `✨ SKOR: ${percentageScore} / 100 ✨`;
-        let html = '';
-        for(let i = 0; i < currentQuestions.length; i++) {
-            const q = currentQuestions[i];
-            const shuffledData = shuffledOptionsList[i];
-            const userAnswerLetter = userAnswers[i];
-            const correctLetter = shuffledData.newAnswer;
-            const isCorrect = (userAnswerLetter === correctLetter);
-            
-            let userAnswerText = "Tidak dijawab";
-            if(userAnswerLetter) {
-                const idx = userAnswerLetter.charCodeAt(0) - 65;
-                userAnswerText = shuffledData.shuffledOptions[idx] || "Tidak diketahui";
-            }
-            const correctIdx = correctLetter.charCodeAt(0) - 65;
-            const correctAnswerText = shuffledData.shuffledOptions[correctIdx];
-            
-            html += `
-                <div class="result-item ${isCorrect ? 'correct' : 'wrong'}">
-                    <div class="result-question"><strong>Soal ${i+1}:</strong> ${escapeHtml(q.text)}</div>
-                    <div class="result-answer">📌 <span>Jawaban Anda:</span> ${escapeHtml(userAnswerText)}</div>
-                    <div class="result-answer">✅ <span>Jawaban Benar:</span> ${escapeHtml(correctAnswerText)}</div>
-                </div>
-            `;
+     function showResult() {
+    const percentageScore = calculatePercentageScore();
+    resultScoreSpan.innerText = `✨ SKOR: ${percentageScore} / 100 ✨`;
+    let html = '';
+    for(let i = 0; i < currentQuestions.length; i++) {
+        const q = currentQuestions[i];
+        const shuffledData = shuffledOptionsList[i];
+        const userAnswerLetter = userAnswers[i];
+        const correctLetter = shuffledData.newAnswer;
+        const isCorrect = (userAnswerLetter === correctLetter);
+        
+        // Format jawaban dengan huruf
+        let userAnswerText = "Tidak dijawab";
+        let userAnswerDisplay = "";
+        if(userAnswerLetter) {
+            const idx = userAnswerLetter.charCodeAt(0) - 65;
+            const rawAnswerText = shuffledData.shuffledOptions[idx] || "Tidak diketahui";
+            // Bersihkan prefix yang mungkin ada
+            const cleanAnswerText = rawAnswerText.replace(/^[A-D]\.\s*/, '');
+            userAnswerDisplay = `${userAnswerLetter}. ${cleanAnswerText}`;
+            userAnswerText = rawAnswerText;
+        } else {
+            userAnswerDisplay = "Tidak dijawab";
         }
-        resultList.innerHTML = html;
-        resultModal.classList.add('show');
+        
+        const correctIdx = correctLetter.charCodeAt(0) - 65;
+        const rawCorrectText = shuffledData.shuffledOptions[correctIdx];
+        const cleanCorrectText = rawCorrectText.replace(/^[A-D]\.\s*/, '');
+        const correctAnswerDisplay = `${correctLetter}. ${cleanCorrectText}`;
+        
+        html += `
+            <div class="result-item ${isCorrect ? 'correct' : 'wrong'}">
+                <div class="result-question"><strong>Soal ${i+1}:</strong> ${escapeHtml(q.text)}</div>
+                <div class="result-answer">📌 <span>Jawaban Anda:</span> ${escapeHtml(userAnswerDisplay)}</div>
+                <div class="result-answer">✅ <span>Jawaban Benar:</span> ${escapeHtml(correctAnswerDisplay)}</div>
+            </div>
+        `;
     }
+    resultList.innerHTML = html;
+    resultModal.classList.add('show');
+}
 
     function hideResult() {
         resultModal.classList.remove('show');
