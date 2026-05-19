@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>CYBER TRAINING | DAK • KAL • SISOS</title>
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        /* SEMUA STYLE SAMA SEPERTI SEBELUMNYA */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 10%, #03050f, #000000);
+            font-family: 'Share Tech Mono', 'Courier New', 'Fira Code', monospace;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .cyber-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .cyber-bg::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(#0ff1 1px, transparent 1px), linear-gradient(90deg, #0ff1 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+        
+        .cyber-bg::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, 
+                rgba(0,255,255,0.03) 0px, 
+                rgba(0,255,255,0.03) 2px, 
+                transparent 2px, 
+                transparent 8px);
+            animation: scanline 8s linear infinite;
+        }
+        
+        @keyframes scanline {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100%); }
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, #0ff, transparent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatParticle linear infinite;
+        }
+        
+        @keyframes floatParticle {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% {
+                opacity: 0;
+                transform: translateY(-20vh) scale(1.5);
+            }
+        }
+        
+        .neon-pulse {
+            position: fixed;
+            bottom: -200px;
+            right: -200px;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,255,255,0.15), transparent);
+            animation: pulse 4s ease-in-out infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .neon-pulse-2 {
+            position: fixed;
+            top: -200px;
+            left: -200px;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,0,255,0.1), transparent);
+            animation: pulse 5s ease-in-out infinite reverse;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.3); opacity: 0.6; }
+            100% { transform: scale(1); opacity: 0.3; }
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .mute-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(8, 12, 25, 0.9);
+            backdrop-filter: blur(12px);
+            border: 2px solid #0ff;
+            border-radius: 60px;
+            padding: 10px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: monospace;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #0ff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        
+        .mute-button:active, .btn-cyber:active, .nav-btn:active, .close-result:active {
+            transform: scale(0.95);
+            transition: transform 0.05s ease;
+        }
+        
+        .mute-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
+            border-color: #f0f;
+            color: #f0f;
+        }
+
+        .cyber-card {
+            background: rgba(8, 12, 25, 0.85);
+            backdrop-filter: blur(20px);
+            border: 2px solid #0ff;
+            border-radius: 48px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5), inset 0 0 15px rgba(0, 255, 255, 0.2);
+            padding: 1.8rem 1.8rem;
+            transition: all 0.3s ease;
+            animation: cardGlow 3s ease-in-out infinite;
+        }
+        
+        @keyframes cardGlow {
+            0% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), inset 0 0 10px rgba(0, 255, 255, 0.1); }
+            50% { box-shadow: 0 0 40px rgba(0, 255, 255, 0.6), inset 0 0 20px rgba(0, 255, 255, 0.2); }
+            100% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.3), inset 0 0 10px rgba(0, 255, 255, 0.1); }
+        }
+
+        .start-screen { text-align: center; }
+        
+        .glitch {
+            font-size: clamp(1.8rem, 7vw, 3rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #0ff;
+            text-shadow: 3px 3px 0 #f0f, -2px -2px 0 #0ff;
+            letter-spacing: 3px;
+            animation: flicker 3s infinite;
+            white-space: nowrap;
+            display: inline-block;
+            margin: 0 auto;
+        }
+        
+        @keyframes flicker {
+            0% { opacity: 0.9; text-shadow: 3px 3px 0 #f0f, -2px -2px 0 #0ff; }
+            50% { opacity: 1; text-shadow: 2px 2px 0 #0ff, -1px -1px 0 #f0f; }
+            100% { opacity: 0.9; text-shadow: 3px 3px 0 #f0f, -2px -2px 0 #0ff; }
+        }
+        
+        .badge-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 16px 0;
+        }
+        
+        .badge-cyber {
+            display: inline-flex;
+            background: rgba(0, 255, 255, 0.1);
+            border-left: 4px solid #0ff;
+            padding: 0.4rem 1.2rem;
+            font-weight: bold;
+            color: #0ff;
+            font-size: clamp(0.7rem, 3.5vw, 0.9rem);
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+        
+        .btn-cyber {
+            background: transparent;
+            border: 2px solid #0ff;
+            color: #0ff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 12px 32px;
+            margin-top: 24px;
+            cursor: pointer;
+            font-family: monospace;
+            transition: all 0.2s ease;
+            border-radius: 60px;
+            box-shadow: 0 0 10px #0ff;
+            width: auto;
+            display: inline-block;
+        }
+        
+        .btn-cyber:hover {
+            background: #0ff;
+            color: #000;
+            box-shadow: 0 0 30px #0ff;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: #0a0f1faa;
+            padding: 8px 20px;
+            border-radius: 60px;
+            border: 1px solid #0ff;
+            margin-bottom: 28px;
+        }
+        
+        .timer-neon {
+            font-size: clamp(1.2rem, 5vw, 1.8rem);
+            font-weight: bold;
+            background: #000000aa;
+            padding: 6px 18px;
+            border-radius: 40px;
+            color: #0f0;
+            text-shadow: 0 0 8px #0f0;
+            border: 1px solid #0f0;
+            font-family: monospace;
+            animation: timerPulse 1s ease-in-out infinite;
+        }
+        
+        @keyframes timerPulse {
+            0% { text-shadow: 0 0 5px #0f0; }
+            50% { text-shadow: 0 0 15px #0f0; }
+            100% { text-shadow: 0 0 5px #0f0; }
+        }
+        
+        .q-counter {
+            color: #0ff;
+            background: #11161f;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            border: 1px solid #0ff;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: clamp(1rem, 4.5vw, 1.5rem);
+            font-weight: 600;
+            line-height: 1.4;
+            margin: 20px 0 28px 0;
+            color: #f0f3ff;
+        }
+        
+        .q-num {
+            display: inline-block;
+            background: rgba(0, 255, 255, 0.2);
+            padding: 5px 16px;
+            border-radius: 30px;
+            color: #0ff;
+            border: 1px solid #0ff;
+            font-size: 0.75rem;
+        }
+        
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        
+        .opt-item {
+            background: #0c1122cc;
+            border: 1px solid #2c3e77;
+            border-radius: 60px;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        
+        .opt-item:active { transform: scale(0.98); background: #2a3a6e; }
+        
+        .opt-item:hover {
+            background: #1f2b4e;
+            border-color: #0ff;
+            box-shadow: 0 0 12px #0ff3;
+        }
+        
+        .opt-radio {
+            width: 18px;
+            height: 18px;
+            accent-color: #0ff;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        
+        .opt-text {
+            font-size: clamp(0.8rem, 3.8vw, 0.95rem);
+            color: #cbd5f0;
+            word-break: break-word;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            background: none;
+            border: 1.5px solid #0ff;
+            padding: 8px 14px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-family: monospace;
+            color: #0ff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: 85px;
+        }
+        
+        .nav-btn:active { transform: scale(0.95); }
+        .nav-btn.primary { background: #0ff1a; box-shadow: 0 0 8px #0ff; }
+        .nav-btn:hover { background: #0ff; color: #000; }
+        .submit-final { background: #f0f22; border-color: #f0f; color: #f0f; }
+
+        .result-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(15px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.3s ease;
+            padding: 20px;
+        }
+        
+        .result-modal.show { visibility: visible; opacity: 1; }
+        
+        .result-card {
+            background: #0a0f1f;
+            border: 2px solid #0ff;
+            border-radius: 48px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 60px #0ff5;
+            position: relative;
+            animation: modalZoomIn 0.3s ease;
+        }
+        
+        @keyframes modalZoomIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .result-header {
+            padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+            border-bottom: 1px solid #0ff;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            background: #0a0f1f;
+            border-radius: 48px 48px 0 0;
+            z-index: 10;
+        }
+        
+        .result-header h3 { color: #0ff; font-size: 1.5rem; margin-bottom: 10px; }
+        .result-score { text-align: center; font-size: 1.5rem; color: #0f0; margin-bottom: 15px; }
+        
+        .result-list-container {
+            overflow-y: auto;
+            padding: 1rem 1.5rem;
+            flex: 1;
+        }
+        
+        .result-item {
+            background: #111827;
+            border-radius: 24px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            border-left: 5px solid;
+            transition: 0.2s;
+        }
+        
+        .result-item.correct { border-left-color: #0f0; background: #0f1a0f; }
+        .result-item.wrong { border-left-color: #f0f; background: #1a0f1a; }
+        .result-question { font-size: 0.85rem; color: #eef4ff; margin-bottom: 8px; }
+        .result-answer { font-size: 0.75rem; color: #94a3b8; }
+        .result-answer span { color: #0ff; }
+        
+        .close-result {
+            background: #0a0f1f;
+            border: 2px solid #0ff;
+            color: #0ff;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 16px 1.5rem 1.8rem 1.5rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+        
+        .close-result:active { transform: scale(0.95); }
+        .close-result:hover { background: #0ff; color: #000; box-shadow: 0 0 20px #0ff; }
+
+        .thankyou-screen { text-align: center; }
+        
+        .score-glow {
+            font-size: clamp(1.8rem, 7vw, 3rem);
+            font-weight: 800;
+            color: #0f0;
+            text-shadow: 0 0 20px #0f0;
+            background: #000000aa;
+            display: inline-block;
+            padding: 0.2rem 1.2rem;
+            border-radius: 60px;
+            margin: 20px 0;
+        }
+        
+        .message-motivation { font-size: 1rem; color: #f0f; margin: 15px 0; letter-spacing: 1px; }
+        .footer-note { margin-top: 24px; color: #6c7a9e; font-size: 0.65rem; }
+
+        @media (max-width: 550px) {
+            .cyber-card { padding: 1.2rem; }
+            .glitch { white-space: normal; word-break: keep-all; letter-spacing: 2px; }
+            .badge-container { gap: 6px; }
+            .badge-cyber { padding: 0.3rem 0.8rem; font-size: 0.7rem; }
+            .nav-buttons { gap: 6px; }
+            .nav-btn { padding: 6px 10px; font-size: 0.7rem; min-width: 70px; }
+            .opt-item { padding: 8px 14px; }
+            .result-header h3 { font-size: 1.2rem; }
+            .result-score { font-size: 1.2rem; }
+            .mute-button { padding: 6px 12px; font-size: 0.75rem; top: 12px; left: 12px; }
+            .btn-cyber { padding: 10px 24px; font-size: 1rem; }
+        }
+        
+        @media (min-width: 551px) and (max-width: 768px) {
+            .cyber-card { padding: 1.5rem; }
+            .glitch { white-space: normal; }
+            .badge-cyber { padding: 0.35rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="cyber-bg"></div>
+<div class="neon-pulse"></div>
+<div class="neon-pulse-2"></div>
+<div class="particles" id="particles"></div>
+
+<button id="muteBtn" class="mute-button">🔊 MUSIC ON</button>
+
+<div class="app-container" id="appRoot">
+    <div id="startScreen" class="cyber-card start-screen">
+        <div class="glitch">CYBER TRAINING</div>
+        <div class="badge-container">
+            <span class="badge-cyber">⚡ DAK</span>
+            <span class="badge-cyber">⚡ SISOS</span>
+            <span class="badge-cyber">⚡ KAL</span>
+        </div>
+        <p style="color:#9bb4ff;" id="totalSoalInfo">Memuat...</p>
+        <p style="color:#0ff9; font-size:0.8rem;">⟡ Waktu Berjalan Setelah Mulai ⟡</p>
+        <button id="startExamBtn" class="btn-cyber">⟢ MULAI UJIAN ⟣</button>
+        <div class="footer-note">© Cyber Training 2026 | Vinnzz</div>
+    </div>
+
+    <div id="examPanel" style="display: none;">
+        <div class="cyber-card">
+            <div class="status-bar">
+                <div class="timer-neon" id="timerDisplay">00:00</div>
+                <div class="q-counter" id="progressCounter">Soal 1 / 0</div>
+            </div>
+            <div id="dynamicQuestionArea"></div>
+            <div class="nav-buttons">
+                <button id="prevBtn" class="nav-btn">◀ SEBELUM</button>
+                <button id="nextBtn" class="nav-btn primary">BERIKUT ▶</button>
+                <button id="finishExamBtn" class="nav-btn submit-final">✔ SELESAI</button>
+            </div>
+            <div class="footer-note"># Jawaban Akan Tersimpan Secara Otomatis</div>
+        </div>
+    </div>
+
+    <div id="thankyouScreen" style="display: none;">
+        <div class="cyber-card thankyou-screen">
+            <div class="glitch" style="font-size:clamp(1.3rem,5vw,2rem);">⚡ TERIMA KASIH ⚡</div>
+            <p style="color:#b9f2ff;">Telah Mengikuti Pelatihan Ujian Siber</p>
+            <div class="score-glow" id="finalScoreDisplay">0 / 100</div>
+            <div class="message-motivation" id="motivationMessage"></div>
+            <button id="showResultBtn" class="btn-cyber" style="margin-top:20px;">📋 LIHAT KUNCI JAWABAN</button>
+            <button id="restartBtn" class="btn-cyber" style="margin-top:12px;">⟳ KERJAKAN ULANG</button>
+            <div class="footer-note">© Cyber Training 2026</div>
+        </div>
+    </div>
+</div>
+
+<div id="resultModal" class="result-modal">
+    <div class="result-card">
+        <div class="result-header">
+            <h3>📋 KUNCI JAWABAN & HASIL ANDA</h3>
+            <div class="result-score" id="resultScore"></div>
+        </div>
+        <div class="result-list-container" id="resultListContainer">
+            <div id="resultList"></div>
+        </div>
+        <button id="closeResultBtn" class="close-result">TUTUP</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="soal.js"></script>
+<script>
+    // ======================== CEK APAKAH SOAL BERHASIL DIMUAT ========================
+    if (typeof MASTER_QUESTIONS === 'undefined') {
+        console.error("ERROR: File soal.js tidak ditemukan atau MASTER_QUESTIONS tidak terdefinisi!");
+        document.getElementById('totalSoalInfo').innerHTML = "❌ GAGAL MEMUAT SOAL! Periksa file soal.js";
+    } else {
+        document.getElementById('totalSoalInfo').innerHTML = MASTER_QUESTIONS.length + " Soal Keamanan Siber | 120 Menit";
+    }
+
+    // ======================== PARTIKEL ANIMASI ========================
+    function createParticles() {
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 40;
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const size = Math.random() * 4 + 2;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = Math.random() * 8 + 5 + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particlesContainer.appendChild(particle);
+        }
+    }
+    createParticles();
+    
+    // ======================== MUSIC PLAYLIST ========================
+    const musicPlaylist = [
+        "https://c.top4top.io/m_3791la5iu1.mp3",
+        "https://d.top4top.io/m_3791wgjxn2.mp3",
+        "https://e.top4top.io/m_3791mf0hv3.mp3",
+        "https://k.top4top.io/m_3791lnhyo1.mp3",
+        "https://l.top4top.io/m_37919ybf22.mp3",
+        "https://b.top4top.io/m_3791kjno03.mp3",
+        "https://c.top4top.io/m_3791p52bw4.mp3",
+        "https://f.top4top.io/m_3791a0zge1.mp3",
+        "https://g.top4top.io/m_3791mf4c32.mp3",
+        "https://h.top4top.io/m_379112fuk3.mp3"
+    ];
+    
+    function shuffleArray(arr) {
+        const shuffled = [...arr];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+    
+    let currentPlaylist = [];
+    let currentTrackIndex = 0;
+    let isMuted = false;
+    let audioElement = null;
+    let isPlaying = false;
+    
+    function initNewPlaylist() {
+        currentPlaylist = shuffleArray(musicPlaylist);
+        currentTrackIndex = 0;
+    }
+    
+    function playCurrentTrack() {
+        if (!audioElement || currentPlaylist.length === 0) return;
+        const trackSrc = currentPlaylist[currentTrackIndex];
+        audioElement.src = trackSrc;
+        if (!isMuted) {
+            const playPromise = audioElement.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(err => console.log("Play error:", err));
+            }
+        }
+    }
+    
+    function playNextTrack() {
+        if (!audioElement) return;
+        currentTrackIndex++;
+        if (currentTrackIndex >= currentPlaylist.length) {
+            initNewPlaylist();
+        }
+        playCurrentTrack();
+    }
+    
+    function initAudio() {
+        audioElement = new Audio();
+        audioElement.volume = 0.4;
+        audioElement.loop = false;
+        audioElement.addEventListener('ended', () => playNextTrack());
+        audioElement.addEventListener('error', () => playNextTrack());
+    }
+    
+    function startMusic() {
+        if (!audioElement) initAudio();
+        initNewPlaylist();
+        playCurrentTrack();
+    }
+    startMusic();
+    
+    const tryAutoplay = () => {
+        if (!isPlaying && !isMuted && audioElement && audioElement.src) {
+            audioElement.play().then(() => isPlaying = true).catch(e => console.log("Still blocked"));
+        }
+        document.removeEventListener('click', tryAutoplay);
+        document.removeEventListener('touchstart', tryAutoplay);
+    };
+    document.addEventListener('click', tryAutoplay);
+    document.addEventListener('touchstart', tryAutoplay);
+    
+    const muteBtn = document.getElementById('muteBtn');
+    muteBtn.addEventListener('click', () => {
+        if (audioElement) {
+            if (isMuted) {
+                audioElement.volume = 0.4;
+                audioElement.play().then(() => isPlaying = true).catch(e => console.log("Playback error"));
+                isMuted = false;
+                muteBtn.innerHTML = "🔊 MUSIC ON";
+                muteBtn.style.color = "#0ff";
+                muteBtn.style.borderColor = "#0ff";
+            } else {
+                audioElement.pause();
+                isPlaying = false;
+                isMuted = true;
+                muteBtn.innerHTML = "🔇 MUSIC OFF";
+                muteBtn.style.color = "#f0f";
+                muteBtn.style.borderColor = "#f0f";
+            }
+        }
+    });
+    
+    // ======================== VARIABEL GLOBAL ========================
+    let currentQuestions = [];
+    let shuffledOptionsList = [];
+    let userAnswers = [];
+    let currentIndex = 0;
+    let examActive = false;
+    let timerInterval = null;
+    let timeLeft = 120 * 60;
+    let finalScore = 0;
+
+    const startScreenDiv = document.getElementById('startScreen');
+    const examPanelDiv = document.getElementById('examPanel');
+    const thankyouScreenDiv = document.getElementById('thankyouScreen');
+    const startBtn = document.getElementById('startExamBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const finishBtn = document.getElementById('finishExamBtn');
+    const timerDisplaySpan = document.getElementById('timerDisplay');
+    const progressCounterSpan = document.getElementById('progressCounter');
+    const dynamicArea = document.getElementById('dynamicQuestionArea');
+    const finalScoreSpan = document.getElementById('finalScoreDisplay');
+    const motivationMsgSpan = document.getElementById('motivationMessage');
+    const restartBtn = document.getElementById('restartBtn');
+    const showResultBtn = document.getElementById('showResultBtn');
+    const resultModal = document.getElementById('resultModal');
+    const closeResultBtn = document.getElementById('closeResultBtn');
+    const resultList = document.getElementById('resultList');
+    const resultScoreSpan = document.getElementById('resultScore');
+
+    function formatTime(sec) {
+        let mins = Math.floor(sec / 60);
+        let s = sec % 60;
+        return `${mins.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    }
+
+    function updateTimerUI() {
+        if(timerDisplaySpan) timerDisplaySpan.innerText = formatTime(timeLeft);
+        if(timeLeft <= 0 && examActive) {
+            clearInterval(timerInterval);
+            examActive = false;
+            finalizeExamAndShowThankyou();
+        }
+    }
+
+    function startTimer() {
+        if(timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            if(examActive && timeLeft > 0) {
+                timeLeft--;
+                updateTimerUI();
+                if(timeLeft === 0) {
+                    clearInterval(timerInterval);
+                    finalizeExamAndShowThankyou();
+                }
+            } else if(timeLeft <= 0) clearInterval(timerInterval);
+        }, 1000);
+    }
+
+    function calculateCorrectCount() {
+        let correct = 0;
+        for(let i=0; i<currentQuestions.length; i++) {
+            if(userAnswers[i] && userAnswers[i] === shuffledOptionsList[i].newAnswer) correct++;
+        }
+        return correct;
+    }
+
+    function calculatePercentageScore() {
+        const correct = calculateCorrectCount();
+        if (currentQuestions.length === 0) return 0;
+        const rawScore = (correct / currentQuestions.length) * 100;
+        return Math.round(rawScore * 10) / 10;
+    }
+
+    function finalizeExamAndShowThankyou() {
+        if(!examActive && thankyouScreenDiv.style.display === 'block') return;
+        examActive = false;
+        if(timerInterval) clearInterval(timerInterval);
+        
+        finalScore = calculateCorrectCount();
+        const percentageScore = calculatePercentageScore();
+        
+        finalScoreSpan.innerText = `${percentageScore} / 100`;
+        
+        let message = "";
+        if (percentageScore === 100) message = "🏆 SEMPURNA! Anda Hebat! 🏆";
+        else if (percentageScore >= 85) message = "🏅 LUAR BIASA! Anda menguasai materi! 🏅";
+        else if (percentageScore >= 70) message = "🔥 SANGAT BAIK! Pertahankan! 🔥";
+        else if (percentageScore >= 60) message = "✨ CUKUP BAIK, tingkatkan lagi! ✨";
+        else if (percentageScore >= 50) message = "📚 Belajar lagi, Anda pasti bisa! 📚";
+        else message = "💪 Jangan menyerah! Pelajari ulang dan coba lagi! 💪";
+        
+        motivationMsgSpan.innerHTML = `✨ Nilai Anda: ${percentageScore} dari 100 ✨<br>${message}`;
+        
+        startScreenDiv.style.display = 'none';
+        examPanelDiv.style.display = 'none';
+        thankyouScreenDiv.style.display = 'block';
+    }
+
+    function shuffleArraySoal(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function shuffleOptions(question) {
+        const options = [...question.options];
+        const correctTextValue = question.correctText;
+        for (let i = options.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [options[i], options[j]] = [options[j], options[i]];
+        }
+        let newCorrectLetter = "";
+        for(let i = 0; i < options.length; i++) {
+            if(options[i] === correctTextValue || options[i].includes(correctTextValue)) {
+                newCorrectLetter = String.fromCharCode(65 + i);
+                break;
+            }
+        }
+        return { shuffledOptions: options, newAnswer: newCorrectLetter };
+    }
+
+    function renderCurrentQuestion() {
+        if(!examActive) return;
+        const q = currentQuestions[currentIndex];
+        const shuffledData = shuffledOptionsList[currentIndex];
+        const selectedVal = userAnswers[currentIndex];
+        const category = ["DAK", "KAL", "SISOS"][currentIndex % 3];
+        
+        let optsHtml = '';
+        shuffledData.shuffledOptions.forEach((opt, idx) => {
+            const letter = String.fromCharCode(65 + idx);
+            const checkedAttr = (selectedVal === letter) ? 'checked' : '';
+            optsHtml += `
+                <label class="opt-item">
+                    <input type="radio" name="currentQuestion" value="${letter}" ${checkedAttr} class="opt-radio">
+                    <span class="opt-text">${letter}. ${escapeHtml(opt)}</span>
+                </label>
+            `;
+        });
+        
+        const html = `
+            <div class="question-area">
+                <div class="q-num">[${category}]  Soal ${currentIndex+1} / ${currentQuestions.length}</div>
+                <div class="question-text">${escapeHtml(q.text)}</div>
+                <div class="options-grid">${optsHtml}</div>
+            </div>
+        `;
+        dynamicArea.innerHTML = html;
+        
+        const radios = document.querySelectorAll('input[name="currentQuestion"]');
+        radios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if(examActive) {
+                    userAnswers[currentIndex] = e.target.value;
+                    updateProgressCounter();
+                }
+            });
+        });
+        updateProgressCounter();
+    }
+
+    function updateProgressCounter() {
+        const answered = userAnswers.filter(a => a !== null && a !== undefined).length;
+        progressCounterSpan.innerText = `Soal ${currentIndex+1} / ${currentQuestions.length}  |  ✓ ${answered} terjawab`;
+    }
+
+    function goPrev() {
+        if(!examActive) return;
+        if(currentIndex > 0) { currentIndex--; renderCurrentQuestion(); }
+        else { showTemporaryMsg("🚀 Ini soal pertama", "#f0f"); }
+    }
+
+    function goNext() {
+        if(!examActive) return;
+        if(currentIndex < currentQuestions.length - 1) { currentIndex++; renderCurrentQuestion(); }
+        else { showTemporaryMsg("📌 Soal terakhir, klik SELESAI", "#0ff"); }
+    }
+
+    function showTemporaryMsg(msg, color) {
+        const tempDiv = document.createElement('div');
+        tempDiv.style.position = 'fixed'; tempDiv.style.bottom = '20px'; tempDiv.style.left = '50%';
+        tempDiv.style.transform = 'translateX(-50%)'; tempDiv.style.background = '#000000cc';
+        tempDiv.style.border = `1px solid ${color}`; tempDiv.style.color = color;
+        tempDiv.style.padding = '8px 18px'; tempDiv.style.borderRadius = '60px'; tempDiv.style.fontSize = '0.8rem';
+        tempDiv.style.zIndex = '999'; tempDiv.style.fontFamily = 'monospace'; tempDiv.style.fontWeight = 'bold';
+        tempDiv.innerText = msg;
+        document.body.appendChild(tempDiv);
+        setTimeout(() => tempDiv.remove(), 1800);
+    }
+
+    function startExam() {
+        if (typeof MASTER_QUESTIONS === 'undefined' || MASTER_QUESTIONS.length === 0) {
+            Swal.fire({
+                title: 'ERROR!',
+                text: 'Data soal tidak ditemukan. Periksa file soal.js',
+                icon: 'error',
+                background: '#0a0f1f',
+                color: '#ff4444'
+            });
+            return;
+        }
+        
+        const shuffled = shuffleArraySoal([...MASTER_QUESTIONS]);
+        currentQuestions = shuffled;
+        shuffledOptionsList = [];
+        for(let q of currentQuestions) {
+            shuffledOptionsList.push(shuffleOptions(q));
+        }
+        userAnswers = new Array(currentQuestions.length).fill(null);
+        currentIndex = 0;
+        timeLeft = 120 * 60;
+        examActive = true;
+        if(timerInterval) clearInterval(timerInterval);
+        startTimer();
+        updateTimerUI();
+        startScreenDiv.style.display = 'none';
+        examPanelDiv.style.display = 'block';
+        thankyouScreenDiv.style.display = 'none';
+        renderCurrentQuestion();
+    }
+
+    function showResult() {
+        const percentageScore = calculatePercentageScore();
+        resultScoreSpan.innerText = `✨ SKOR: ${percentageScore} / 100 ✨`;
+        let html = '';
+        for(let i = 0; i < currentQuestions.length; i++) {
+            const q = currentQuestions[i];
+            const shuffledData = shuffledOptionsList[i];
+            const userAnswerLetter = userAnswers[i];
+            const correctLetter = shuffledData.newAnswer;
+            const isCorrect = (userAnswerLetter === correctLetter);
+            
+            let userAnswerText = "Tidak dijawab";
+            if(userAnswerLetter) {
+                const idx = userAnswerLetter.charCodeAt(0) - 65;
+                userAnswerText = shuffledData.shuffledOptions[idx] || "Tidak diketahui";
+            }
+            const correctIdx = correctLetter.charCodeAt(0) - 65;
+            const correctAnswerText = shuffledData.shuffledOptions[correctIdx];
+            
+            html += `
+                <div class="result-item ${isCorrect ? 'correct' : 'wrong'}">
+                    <div class="result-question"><strong>Soal ${i+1}:</strong> ${escapeHtml(q.text)}</div>
+                    <div class="result-answer">📌 <span>Jawaban Anda:</span> ${escapeHtml(userAnswerText)}</div>
+                    <div class="result-answer">✅ <span>Jawaban Benar:</span> ${escapeHtml(correctAnswerText)}</div>
+                </div>
+            `;
+        }
+        resultList.innerHTML = html;
+        resultModal.classList.add('show');
+    }
+
+    function hideResult() {
+        resultModal.classList.remove('show');
+    }
+
+    function restartToStart() {
+        if(timerInterval) clearInterval(timerInterval);
+        examActive = false;
+        startScreenDiv.style.display = 'block';
+        examPanelDiv.style.display = 'none';
+        thankyouScreenDiv.style.display = 'none';
+        currentQuestions = [];
+        shuffledOptionsList = [];
+        userAnswers = [];
+        if(timerDisplaySpan) timerDisplaySpan.innerText = formatTime(120*60);
+    }
+
+    finishBtn.addEventListener('click', async () => {
+        if(examActive) {
+            const result = await Swal.fire({
+                title: '⚠️ SELESAI UJIAN?',
+                text: "Semua jawaban akan dinilai dan sesi diakhiri. Anda yakin?",
+                icon: 'question',
+                background: '#0a0f1f',
+                color: '#0ff',
+                confirmButtonColor: '#f0f',
+                cancelButtonColor: '#0ff',
+                confirmButtonText: 'YA, SELESAI!',
+                cancelButtonText: 'BATAL',
+                showCancelButton: true,
+                backdrop: `rgba(0,0,0,0.8)`
+            });
+            if (result.isConfirmed) {
+                finalizeExamAndShowThankyou();
+            }
+        }
+    });
+
+    startBtn.addEventListener('click', startExam);
+    prevBtn.addEventListener('click', goPrev);
+    nextBtn.addEventListener('click', goNext);
+    showResultBtn.addEventListener('click', showResult);
+    closeResultBtn.addEventListener('click', hideResult);
+    restartBtn.addEventListener('click', restartToStart);
+
+    function escapeHtml(str) {
+        if(!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    startScreenDiv.style.display = 'block';
+    examPanelDiv.style.display = 'none';
+    thankyouScreenDiv.style.display = 'none';
+</script>
+</body>
+</html>
