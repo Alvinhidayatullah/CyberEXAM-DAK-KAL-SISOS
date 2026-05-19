@@ -9,13 +9,13 @@
     {
       "src": "soal.js",
       "use": "@vercel/static"
+    },
+    {
+      "src": "app.js",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
-    {
-      "src": "/soal.js",
-      "dest": "/soal.js"
-    },
     {
       "src": "/(.*)",
       "dest": "/index.html"
